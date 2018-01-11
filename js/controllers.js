@@ -65,6 +65,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
 
         });
+
         $window.location = location;
 
     }
@@ -200,18 +201,184 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         });
     }
 
+
     firebase.auth().onAuthStateChanged(function(user) {
 
-        if (user) {
+        function registerUser(userId, name, email, imageUrl) {
+            firebase.auth().onAuthStateChanged((user) => {
 
+                //console.log('userdetails', user);
+                firebase.database().ref('users/' + user.uid).set({
+                    username: user.displayName,
+                    email: user.email,
+                    picture: user.photoURL
+                });
+
+            });
+        }
+
+        if (user) {
+            $scope.user = user;
+            console.log("CheckIfVerified", user);
+            if (user.displayName == null) {
+                $window.location = "#!/forms/verifyUser";
+
+
+            } else {
+
+
+            }
 
 
         } else {
             $window.location = "login.html";
         }
-
-
     });
+
+    /** Verify User **/
+    $scope.verifySubmit = function() {
+    	createBalance();
+        $scope.verifyFirstName = this.verifyFirstName;
+        $scope.verifyMiddleName = this.verifyMiddleName;
+        $scope.verifyLastName = this.verifyLastName;
+        $scope.verifyGuest = this.verifyAbout;
+
+        $scope.verifyName = '' + $scope.verifyFirstName + ' ' + $scope.verifyMiddleName + ' ' + $scope.verifyLastName;
+        firebase.auth().onAuthStateChanged(function(user) {
+            user.updateProfile({
+                displayName: $scope.verifyName,
+                photoURL: "img/anonymous.png"
+            }).then(function() {
+                // Profile updated successfully!
+                // "Jane Q. User"
+                registerUser()
+                $window.location = "#!/app/profile";
+
+
+            }, function(error) {
+                // An error happened.
+            });
+
+
+            firebase.auth().onAuthStateChanged((user) => {
+                //console.log("GuestUser", user);
+                if (user.photoURL == null) {}
+                let ref = firebase.database().ref("Guest")
+                    .orderByChild("email")
+                    .equalTo(user.email)
+                    .limitToLast(1)
+                ref.once("value", function(snapshot) {
+                    $scope.Guestinfo = snapshot.val();
+                    FullName = '' + $scope.verifyFirstName + ' ' + $scope.verifyMiddleName + ' ' + $scope.verifyLastName;
+                    if ($scope.Guestinfo == null) {
+                        post = firebase.database().ref('Guest/').push({
+                            about: $scope.verifyGuest,
+                            user: user.uid,
+                            picture: "img/anonymous.png",
+                            email: user.email,
+                            name: FullName,
+                            createdAt: firebase.database.ServerValue.TIMESTAMP,
+                        });
+                    } else {
+
+                    }
+
+                    $window.location = "#!/app/profile";
+                });
+            });
+
+
+            /*
+             * add as guest
+             */
+
+
+
+
+
+        });
+
+
+    }
+
+
+    /** User Info **/
+    firebase.auth().onAuthStateChanged((user) => {
+        let ref = firebase.database().ref("Guest")
+            .orderByChild("email")
+            .equalTo(user.email)
+            .limitToLast(1)
+        ref.on("value", function(snapshot) {
+            key = Object.keys(snapshot.val());
+            console.log("K", snapshot.val()[key].picture);
+            $timeout(function() {
+                $scope.picture = snapshot.val()[key].picture;
+                $scope.name = snapshot.val()[key].name;
+            });
+        });
+    });
+    $scope.count = 0;
+
+    $scope.usernameSendTo = function(a){
+    	
+    	console.log(a.userSendTo);
+    	query = ""+a.userSendTo+"@kwarta.com";
+    	firebase.auth().onAuthStateChanged((user) => {
+        let ref = firebase.database().ref("Guest")
+            .orderByChild("email")
+            .equalTo(query)
+            .limitToLast(1)
+        ref.on("value", function(snapshot) {
+        	if(snapshot.val() == null){
+        		$scope.UserName = "User Not Found";
+        	}else{
+        		key = Object.keys(snapshot.val());
+            $timeout(function() {
+                $scope.UserPicture = snapshot.val()[key].picture;
+                $scope.UserName = snapshot.val()[key].name;
+
+            });
+        	}
+            
+            
+        });
+    });
+
+
+    }
+
+    function createBalance(){
+    	firebase.auth().onAuthStateChanged((user) => {
+    		firebase.database().ref('Balance/').push({
+                        balance: 100000,
+                        email: user.email,
+                    });
+    	});
+    	
+    }
+
+    function getBalance(){
+    	firebase.auth().onAuthStateChanged((user) => {
+        let ref = firebase.database().ref("Balance")
+            .orderByChild("email")
+            .equalTo(user.email)
+            .limitToLast(1)
+        ref.on("value", function(snapshot) {
+        	
+        	if(snapshot.val() == null){
+
+        	}else{
+        		key = Object.keys(snapshot.val());
+        		$timeout(function() {
+        		$scope.balance = snapshot.val()[key].balance;
+        	});
+        	}
+        });
+    });
+    }
+
+    getBalance();
+
 };
 
 
