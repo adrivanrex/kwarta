@@ -303,7 +303,9 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
 
     /** User Info **/
-    firebase.auth().onAuthStateChanged((user) => {
+    
+    function getUserInfo(){
+    	firebase.auth().onAuthStateChanged((user) => {
         let ref = firebase.database().ref("Guest")
             .orderByChild("email")
             .equalTo(user.email)
@@ -311,12 +313,13 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         ref.on("value", function(snapshot) {
             key = Object.keys(snapshot.val());
             console.log("K", snapshot.val()[key].picture);
-            $timeout(function() {
-                $scope.picture = snapshot.val()[key].picture;
-                $scope.name = snapshot.val()[key].name;
-            });
+            $scope.picture = snapshot.val()[key].picture;
+            $scope.userName = snapshot.val()[key].name;
         });
     });
+    };
+    getUserInfo();
+
     $scope.count = 0;
 
     $scope.usernameSendTo = function(a){
@@ -378,6 +381,74 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     }
 
     getBalance();
+
+    $scope.$on('$locationChangeStart', function(event) {
+    	switch ($location.path()) {
+    		case '/app/profile':
+    		getBalance();
+    		case '/dashboards/dashboard_4_1':
+    		getTransactions();
+    	}
+    });
+
+    $scope.send = function(a){
+    	console.log(a);
+    	userAmount = a.userAmount;
+    	userSend = ""+a.userSendTo+"@kwarta.com";
+    	/** Add balance to user **/
+    	firebase.auth().onAuthStateChanged((user) => {
+                let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(userSend)
+                ref.once("child_added", function(snapshot) {
+                	console.log(snapshot.val().balance);
+                	key = Object.keys(snapshot.val());
+                	userBalance = snapshot.val().balance;
+                	console.log("BALANCE", userBalance);
+                	userBalance = userBalance + userAmount;
+                    snapshot.ref.update({ balance: userBalance })
+                });
+
+            });
+
+    	/** Minus balance to profile **/
+    	firebase.auth().onAuthStateChanged((user) => {
+                let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(user.email)
+                ref.once("child_added", function(snapshot) {
+                	console.log(snapshot.val());
+                	key = Object.keys(snapshot.val());
+                	userBalance = snapshot.val().balance;
+                	userBalance = userBalance - userAmount;
+                    snapshot.ref.update({ balance: userBalance })
+                });
+
+            });
+
+    	
+
+    	firebase.auth().onAuthStateChanged((user) => {
+    		firebase.database().ref('Transactions/').push({
+                        amount: userAmount,
+                        sendto: userSend,
+                        user: user.uid,
+                        createdAt: firebase.database.ServerValue.TIMESTAMP
+                    });
+    	});
+
+
+    	alert("successfully sent");
+
+    }
+
+    function getTransactions(){
+    	firebase.auth().onAuthStateChanged((user) => {
+                let ref = firebase.database().ref("Transactions").orderByChild("user").equalTo(user.uid)
+                ref.once("value", function(snapshot) {
+                	$scope.transactions = snapshot.val();
+                });
+
+            });
+    }
+
+    
 
 };
 

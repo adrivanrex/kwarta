@@ -15,21 +15,17 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Project </th>
-                        <th>Name </th>
-                        <th>Company </th>
-                        <th>Date</th>
-                        <th>Status</th>
+                        <th>Amount </th>
+                        <th>Send To </th>
+                        <th>Date </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="applicantView in applicantView">
+                    <tr ng-repeat="transactions in transactions">
 
-                        <td><a href="#!/app/project_detail?id={{applicantView.ProjectDetailID}}">{{applicantView.ProjectDetailID}}</a><small>{{ApplicantView}}</small></td>
-                        <td>{{applicantView.ApplicantDisplayName}}</td>
-                        <td>{{applicantView.email}}</td>
-                        <td>{{applicantView.humanTime}}</td>
-                        <td>{{applicantView.status}}</td>
+                        <td>{{transactions.amount}}<small></td>
+                        <td>{{transactions.sendto}}</td>
+                        <td>{{transactions.createdAt}}</td>
                     </tr>
                  
                     </tbody>
