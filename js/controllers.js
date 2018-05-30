@@ -43,7 +43,7 @@ function translateCtrl($translate, $scope) {
 
 function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
     var auth = $firebaseAuth();
-    var location = "/kwarta";
+    var location = "/";
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             // User is signed in.;
