@@ -28,7 +28,7 @@
  * Contains severals global data used in diferent view
  *
  */
-var site = "/kwarta";
+var site = "/";
 
 function translateCtrl($translate, $scope) {
     $scope.changeLanguage = function(langKey) {
