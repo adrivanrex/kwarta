@@ -27,7 +27,7 @@ function config($translateProvider) {
             DISCOVER : "Discover",
             CREATE : "Create",
             // Define some custom text
-            WELCOME: 'Welcome to rxjob Firebase boilerplate',
+            WELCOME: 'Welcome',
             MESSAGEINFO: 'You have 42 messages and 6 notifications.',
             SEARCH: 'Search for something...',
             Activity: "Activity",
