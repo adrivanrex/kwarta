@@ -355,6 +355,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     		firebase.database().ref('Balance/').push({
                         balance: 100000,
                         email: user.email,
+                        user: user.uid,
                     });
     	});
     	
@@ -395,6 +396,8 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     	console.log(a);
     	userAmount = a.userAmount;
     	userSend = ""+a.userSendTo+"@kwarta.com";
+        alert(userSend);
+
     	/** Add balance to user **/
     	firebase.auth().onAuthStateChanged((user) => {
                 let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(userSend)
@@ -441,7 +444,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     function getTransactions(){
     	firebase.auth().onAuthStateChanged((user) => {
                 let ref = firebase.database().ref("Transactions").orderByChild("user").equalTo(user.uid)
-                ref.once("value", function(snapshot) {
+                ref.on("value", function(snapshot) {
                 	$scope.transactions = snapshot.val();
                 });
 
