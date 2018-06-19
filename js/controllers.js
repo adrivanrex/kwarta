@@ -394,7 +394,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
     $scope.send = function(a){
     	console.log(a);
-    	userAmount = a.userAmount;
+    	userAmount = Math.abs(a.userAmount);
     	userSend = ""+a.userSendTo+"@kwarta.com";
         
 
