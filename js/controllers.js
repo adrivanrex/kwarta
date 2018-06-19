@@ -405,10 +405,15 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 ref.once("child_added", function(snapshot) {
                     /** Disallow Sending to self **/
 
+
                     if(userSend == snapshot.val().email){
                         alert("sending to self not allowed");
                     }else{
-                        /** Add balance to user **/
+
+                        if(userAmount > snapshot.val().balance){
+                            alert("Insufficient balance");
+                        }else{
+                            /** Add balance to user **/
         firebase.auth().onAuthStateChanged((user) => {
                 let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(userSend)
                 ref.once("child_added", function(snapshot) {
@@ -448,6 +453,9 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
 
         alert("successfully sent");
+                        }
+
+                        
                     }
 
                 });
