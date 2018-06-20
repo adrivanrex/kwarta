@@ -493,7 +493,10 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         firebase.auth().onAuthStateChanged((user) => {
             let ref = firebase.database().ref("Transactions").orderByChild("user").equalTo(user.uid)
             ref.on("value", function(snapshot) {
-                $scope.transactions = snapshot.val();
+                $timeout(function() {
+                    $scope.transactions = snapshot.val();
+                });
+                
             });
 
         });
