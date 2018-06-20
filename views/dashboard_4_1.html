@@ -7,7 +7,6 @@
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>Transaction </h5>
-            <div ibox-tools></div>
         </div>
         <div class="ibox-content">
         
@@ -15,14 +14,15 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
+                        <th>type</th>
                         <th>Amount </th>
-                        <th>Send To </th>
+                        <th>Sender</th>
                         <th>Date </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="transactions in transactions">
-
+                        <td>{{transactions.type}}</td>
                         <td>{{transactions.amount}}<small></td>
                         <td>{{transactions.sendto}}</td>
                         <td>{{transactions.createdAt}}</td>
