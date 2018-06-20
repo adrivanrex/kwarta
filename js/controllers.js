@@ -29,6 +29,7 @@
  *
  */
 var site = "/";
+//var domain = "kwartakwarta.com";
 
 function translateCtrl($translate, $scope) {
     $scope.changeLanguage = function(langKey) {
@@ -396,6 +397,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         console.log(a);
         userAmount = Math.abs(a.userAmount);
         userSend = "" + a.userSendTo + "@kwarta.com";
+        comment = a.userComment;
 
         firebase.auth().onAuthStateChanged((user) => {
             let ref = firebase.database().ref("Balance").orderByChild("user").equalTo(user.uid)
@@ -444,6 +446,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                                 amount: userAmount,
                                 sendto: userSend,
                                 type: "sent",
+                                comment: comment,
                                 user: user.uid,
                                 createdAt: firebase.database.ServerValue.TIMESTAMP
                             });
@@ -462,6 +465,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                                     firebase.database().ref('Transactions/').push({
                                         amount: userAmount,
                                         sendto: userSend,
+                                        comment:comment,
                                         type: "recieve",
                                         user: snapshot.val().user,
                                         createdAt: firebase.database.ServerValue.TIMESTAMP
