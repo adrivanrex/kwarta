@@ -23,16 +23,7 @@
                     <a class="navbar-brand" href="index.html">Connection</a>
                 </div>
                 <div class="navbar-header navLogin pull-right">
-                    <form ng-submit="login()" class="navbar-form pull-right">
-                        <input ng-model="loginEmail" name="loginEmail" class="span2 form-control" type="text" placeholder="Ecode">
-                        <input ng-model="loginPassword" name="loginPassword" class="span2 form-control" type="password" placeholder="Password">
-                        <button type="submit" class="btn btn-primary">Enter</button>
-                        <div  class="m-t-xs">
-                                <small id="loginAlert" class="text-danger hide"></small>
-                                
-                            </div>
-                        
-                    </form>
+                    
                 </div>
             </div>
         </nav>
@@ -48,28 +39,27 @@
             </div>
             <div class="col-md-6">
                 <div class="ibox-content">
-                    <form  ng-submit="register()" name="signup_form" novalidate  class="m-t" role="form">
+
+                    <form  ng-submit="login()" name="signup_form" novalidate  class="m-t" role="form">
                         <div class="form-group">
-                        	<h3>{{ 'SignUP' | translate }}</h3>
-                        	<strong>{{ 'FREE' | translate }}</strong>
-                            <input ng-model="registerEmail" type="text" class="form-control" placeholder="Ecode" required="">
-                            <div  class="m-t-xs">
-                                <small id="registerEmailError" class="text-danger hide"></small>
-                                
-                            </div>
+                        	
+                            <input ng-model="loginEmail" name="loginEmail" class="span2 form-control" type="text" placeholder="Ecode">
+                            
                         </div>
                         
 
                         <div class="form-group">
 
-                            <input ng-model="registerPassword" type="password" class="form-control" placeholder="Password" required="">
+                            <input ng-model="loginPassword" name="loginPassword" class="span2 form-control" type="password" placeholder="Password">
                             <div class="m-t-xs">
                                 <small id="registerPasswordError" class="text-danger hide"></small>
                                 
                             </div>
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary block full-width m-b">Register</button>
+                     <div  class="m-t-xs">
+                            <small id="loginAlert" class="text-danger hide"></small>  
+                        </div>
+                       <button type="submit" class="btn btn-primary">Enter</button>
                        
                         
                     </form>
