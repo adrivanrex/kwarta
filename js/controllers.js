@@ -238,11 +238,13 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
     /** Verify User **/
     $scope.verifySubmit = function() {
+        
         createBalance();
         $scope.verifyFirstName = this.verifyFirstName;
         $scope.verifyMiddleName = this.verifyMiddleName;
         $scope.verifyLastName = this.verifyLastName;
         $scope.verifyGuest = this.verifyAbout;
+        $scope.verifyGender = this.verifyGender;
 
         $scope.verifyName = '' + $scope.verifyFirstName + ' ' + $scope.verifyMiddleName + ' ' + $scope.verifyLastName;
         firebase.auth().onAuthStateChanged(function(user) {
@@ -271,6 +273,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 ref.once("value", function(snapshot) {
                     $scope.Guestinfo = snapshot.val();
                     FullName = '' + $scope.verifyFirstName + ' ' + $scope.verifyMiddleName + ' ' + $scope.verifyLastName;
+                    gender = $scope.verifyGender;
                     if ($scope.Guestinfo == null) {
                         post = firebase.database().ref('Guest/').push({
                             about: $scope.verifyGuest,
@@ -278,6 +281,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                             picture: "img/anonymous.png",
                             email: user.email,
                             name: FullName,
+                            gender: gender,
                             createdAt: firebase.database.ServerValue.TIMESTAMP,
                         });
                     } else {
@@ -298,7 +302,6 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
 
         });
-
 
     }
 
