@@ -102,7 +102,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
     }
 
     function register(email, password, inviteCode) {
-        invite = false;
+        var invite = false;
 
         if (inviteCode == null) {
             document.getElementById("registerPasswordError").classList.remove('hide');
@@ -114,13 +114,66 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
          */
 
         Http = new XMLHttpRequest();
-        url="https://api-project-375080472585.firebaseio.com/inviteCode.json?orderBy=%22value%22&print=pretty&equalTo="+inviteCode+"";
+        url = 'https://api-project-375080472585.firebaseio.com/inviteCode.json?orderBy=%22value%22&print=%22pretty%22&equalTo=' + inviteCode + '';
         Http.open("GET", url);
         Http.send();
-        Http.onreadystatechange=(e)=>{
+        Http.onreadystatechange = (e) => {
             console.log(Http.responseText.length);
-            if(Http.responseText.length > 4){
-                var invite = true;
+            if (Http.responseText.length > 4) {
+
+                response = JSON.parse(Http.responseText);
+                key = Object.keys(response);
+                console.log(response[key].value);
+                if (response[key].value == inviteCode) {
+                    var invite = true;
+                    console.log("invite true");
+
+                    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
+                        console.log(value);
+                        registerLoginUsernamePass(email, password);
+                    }).catch(function(error) {
+                        $timeout(function() {
+
+                            /*
+                             *   Register Validation
+                             */
+
+                            if (error.code == "auth/email-already-in-use") {
+                                if (error.message == "The email address is already in use by another account.") {
+                                    error.message = "The ecode is already in use";
+                                }
+
+                                document.getElementById("registerEmailError").classList.remove('hide');
+                                document.getElementById("registerEmailError").innerHTML = error.message;
+                            }
+
+                            console.log(error);
+                            if (error.code == "auth/invalid-email") {
+                                if (error.message == "The email address is badly formatted.") {
+                                    error.message = "You are using an invalid character."
+                                }
+                                document.getElementById("registerEmailError").classList.remove('hide');
+                                document.getElementById("registerEmailError").innerHTML = error.message;
+
+                            }
+
+                            if (error.code == "auth/argument-error") {
+                                document.getElementById("registerPasswordError").classList.remove('hide');
+                                document.getElementById("registerPasswordError").innerHTML = error.message;
+                            }
+                            if (error.code == "auth/weak-password") {
+
+                                document.getElementById("registerPasswordError").classList.remove('hide');
+                                document.getElementById("registerPasswordError").innerHTML = error.message;
+                            }
+                        });
+                    });
+                } else {
+
+                    document.getElementById("invitationError").classList.add('show');
+                    document.getElementById("invitationError").innerHTML = "invalid invite code. This website is only for invited members";
+
+                }
             }
         }
 
@@ -137,51 +190,6 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
         document.getElementById("registerEmailError").classList.add('hide');
 
-        if (invite) {
-            firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
-                console.log(value);
-                registerLoginUsernamePass(email, password);
-            }).catch(function(error) {
-                $timeout(function() {
-
-                    /*
-                     *   Register Validation
-                     */
-
-                    if (error.code == "auth/email-already-in-use") {
-                        if (error.message == "The email address is already in use by another account.") {
-                            error.message = "The ecode is already in use";
-                        }
-
-                        document.getElementById("registerEmailError").classList.remove('hide');
-                        document.getElementById("registerEmailError").innerHTML = error.message;
-                    }
-
-                    console.log(error);
-                    if (error.code == "auth/invalid-email") {
-                        if (error.message == "The email address is badly formatted.") {
-                            error.message = "You are using an invalid character."
-                        }
-                        document.getElementById("registerEmailError").classList.remove('hide');
-                        document.getElementById("registerEmailError").innerHTML = error.message;
-
-                    }
-
-                    if (error.code == "auth/argument-error") {
-                        document.getElementById("registerPasswordError").classList.remove('hide');
-                        document.getElementById("registerPasswordError").innerHTML = error.message;
-                    }
-                    if (error.code == "auth/weak-password") {
-
-                        document.getElementById("registerPasswordError").classList.remove('hide');
-                        document.getElementById("registerPasswordError").innerHTML = error.message;
-                    }
-                });
-            });
-        } else {
-            document.getElementById("invitationError").classList.add('show');
-            document.getElementById("invitationError").innerHTML = "invalid invite code. This website is only for invited members";
-        }
 
 
 
@@ -191,7 +199,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
     $scope.register = function() {
         ecode = $scope.registerEmail + "@kwarta.com";
-        register(ecode, $scope.registerPassword,$scope.invitationCode);
+        register(ecode, $scope.registerPassword, $scope.invitationCode);
     }
 
     $scope.googlelogin = function() {
@@ -391,6 +399,17 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         });
 
     }
+
+    function generateInviteCode() {
+        firebase.auth().onAuthStateChanged((user) => {
+            firebase.database().ref('inviteCode/').push({
+                value: firebase.database.ServerValue.TIMESTAMP,
+                user: user.uid,
+            });
+        });
+    }
+
+    generateInviteCode();
 
     function getBalance() {
         firebase.auth().onAuthStateChanged((user) => {

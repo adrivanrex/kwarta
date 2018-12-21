@@ -13,60 +13,55 @@
     <!-- Main CSS files -->
     <link href="css/animate.css" rel="stylesheet">
     <link id="loadBefore" href="css/style.css" rel="stylesheet">
-    <! -- † -->
 </head>
 
 <body id="page-top" class="landing-page no-skin-config" ng-controller="LoginCtrl" class="gray-bg">
-    <div class="navbar-wrapper">
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="index.html">Kwarta</a>
-                </div>
-                <div class="navbar-header navLogin pull-right">
-                    
-                </div>
-            </div>
-        </nav>
-    </div>
+    
     <div class="loginColumns animated fadeInDown">
         <div class="row">
             <div class="col-md-6">
-                <h2>Your online payment solution </h2><br>
-                    
+                <h2 class="font-bold">{{ 'WELCOME' | translate }}</h2>
+                <p>
+                	<!--
+                    <strong>{{ 'DISCOVER' | translate }}</strong> {{ 'the latest items' | translate }} <br>
+                    -->
             </div>
             <div class="col-md-6">
                 <div class="ibox-content">
-
-                    <form  ng-submit="login()" name="signup_form" novalidate  class="m-t" role="form">
+                    <form  ng-submit="register()" name="signup_form" novalidate  class="m-t" role="form">
                         <div class="form-group">
-                        	
-                            <input ng-model="loginEmail" name="loginEmail" class="span2 form-control" type="text" placeholder="Ecode">
-                            
+                            <input ng-model="registerEmail" type="text" class="form-control" placeholder="Ecode" required="">
+                            <div  class="m-t-xs">
+                                <small id="registerEmailError" class="text-danger hide"></small>
+                                
+                            </div>
                         </div>
                         
 
                         <div class="form-group">
-
-                            <input ng-model="loginPassword" name="loginPassword" class="span2 form-control" type="password" placeholder="Password">
+                            <input ng-model="registerPassword" type="password" class="form-control" placeholder="Password" required="">
                             <div class="m-t-xs">
-                                <small id="registerPasswordError" class="text-danger hide"></small>
+                                <small id="invitationError" class="text-danger hide"></small>
                                 
                             </div>
                         </div>
-                     <div  class="m-t-xs">
-                            <small id="loginAlert" class="text-danger hide"></small>  
-                        </div>
-                       <button type="submit" class="btn btn-primary">Enter</button>
-                        <button class="btn btn-primary"><a href="register.html">Register</a></button>
 
+                        <div class="form-group">
+                            <input ng-model="invitationCode" type="text" class="form-control" placeholder="Invite Code" required="">
+                            <div class="m-t-xs">
+                                <small id="invitationError" class="text-danger hide"></small>
+                                
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary block full-width m-b">Register</button>
                        
                         
                     </form>
                 </div>
             </div>
         </div>
-        <br/>
+        <hr/>
         <div class="row">
             <div class="col-md-6">
             <li class="dropdown" dropdown>
@@ -90,7 +85,13 @@
                     Policy
                 </a>
                 
-                </li>
+            </li>
+            <li>
+                <a href="/rxjob/careers/">
+                    Career
+                </a>
+                
+            </li>
             </div>
             
             <div class="col-md-6 text-right">
@@ -128,6 +129,14 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="js/ngmap.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+    <!-- Anglar App Script -->
+    <script src="js/app.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/controllers.js"></script>
 <script>
   // Initialize Firebase
   var config = {
@@ -139,15 +148,21 @@
     messagingSenderId: "375080472585"
   };
   firebase.initializeApp(config);
+  firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            // User is signed in.;
+            console.log("userinfo", user);
+            $scope.user = user;
+        }else{
+            console.log("not logged in");
+        }
+
+    });
+
 </script>
-    <!-- AngularFire -->
-    <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
-    <!-- Anglar App Script -->
-    <script src="js/app.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/translations.js"></script>
-    <script src="js/directives.js"></script>
-    <script src="js/controllers.js"></script>
+    
+
+
 </body>
 
 </html>
