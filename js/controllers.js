@@ -101,7 +101,28 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
     }
 
-    function register(email, password) {
+    function register(email, password, inviteCode) {
+
+        if (inviteCode == null) {
+            document.getElementById("registerPasswordError").classList.remove('hide');
+            document.getElementById("registerPasswordError").innerHTML = "This website requires and invitation code";
+        }
+
+        /*
+         * Verify Invite Code
+         */
+
+        Http = new XMLHttpRequest();
+        url="https://api-project-375080472585.firebaseio.com/inviteCode.json?orderBy=%value%22&print=pretty&equalTo="+inviteCode+"";
+        Http.open("GET", url);
+        Http.send();
+        Http.onreadystatechange=(e)=>{
+            console.log(Http.responseText.length);
+            if(Http.responseText.length > 4){
+                invite = true;
+            }
+        }
+
 
         if (password == null) {
             document.getElementById("registerPasswordError").classList.remove('hide');
@@ -114,48 +135,52 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
         }
         document.getElementById("registerEmailError").classList.add('hide');
 
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
-            console.log(value);
-            registerLoginUsernamePass(email, password);
-        }).catch(function(error) {
-            $timeout(function() {
-                /*
-                 *   Register Validation
-                 */
-                if (error.code == "auth/email-already-in-use") {
-                    if (error.message == "The email address is already in use by another account.") {
-                        error.message = "The ecode is already in use";
+        if (invite) {
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
+                console.log(value);
+                registerLoginUsernamePass(email, password);
+            }).catch(function(error) {
+                $timeout(function() {
+
+                    /*
+                     *   Register Validation
+                     */
+
+                    if (error.code == "auth/email-already-in-use") {
+                        if (error.message == "The email address is already in use by another account.") {
+                            error.message = "The ecode is already in use";
+                        }
+
+                        document.getElementById("registerEmailError").classList.remove('hide');
+                        document.getElementById("registerEmailError").innerHTML = error.message;
                     }
 
-                    document.getElementById("registerEmailError").classList.remove('hide');
-                    document.getElementById("registerEmailError").innerHTML = error.message;
-                }
+                    console.log(error);
+                    if (error.code == "auth/invalid-email") {
+                        if (error.message == "The email address is badly formatted.") {
+                            error.message = "You are using an invalid character."
+                        }
+                        document.getElementById("registerEmailError").classList.remove('hide');
+                        document.getElementById("registerEmailError").innerHTML = error.message;
 
-                console.log(error);
-                if (error.code == "auth/invalid-email") {
-                    if (error.message == "The email address is badly formatted.") {
-                        error.message = "You are using an invalid character."
                     }
-                    document.getElementById("registerEmailError").classList.remove('hide');
-                    document.getElementById("registerEmailError").innerHTML = error.message;
 
-                }
+                    if (error.code == "auth/argument-error") {
+                        document.getElementById("registerPasswordError").classList.remove('hide');
+                        document.getElementById("registerPasswordError").innerHTML = error.message;
+                    }
+                    if (error.code == "auth/weak-password") {
 
-                if (error.code == "auth/argument-error") {
-                    document.getElementById("registerPasswordError").classList.remove('hide');
-                    document.getElementById("registerPasswordError").innerHTML = error.message;
-                }
-                if (error.code == "auth/weak-password") {
-
-                    document.getElementById("registerPasswordError").classList.remove('hide');
-                    document.getElementById("registerPasswordError").innerHTML = error.message;
-                }
+                        document.getElementById("registerPasswordError").classList.remove('hide');
+                        document.getElementById("registerPasswordError").innerHTML = error.message;
+                    }
+                });
             });
+        } else {
+            document.getElementById("registerEmailError").classList.add('show');
+            document.getElementById("registerEmailError").innerHTML = "invalid invite code. This website is only for invited members";
+        }
 
-
-
-
-        });
 
 
 
@@ -164,7 +189,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
     $scope.register = function() {
         ecode = $scope.registerEmail + "@kwarta.com";
-        register(ecode, $scope.registerPassword);
+        register(ecode, $scope.registerPassword,$scope.invitationCode);
     }
 
     $scope.googlelogin = function() {
@@ -238,7 +263,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
     /** Verify User **/
     $scope.verifySubmit = function() {
-        
+
         createBalance();
         $scope.verifyFirstName = this.verifyFirstName;
         $scope.verifyMiddleName = this.verifyMiddleName;
@@ -468,7 +493,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                                     firebase.database().ref('Transactions/').push({
                                         amount: userAmount,
                                         sendto: userSend,
-                                        comment:comment,
+                                        comment: comment,
                                         type: "recieve",
                                         user: snapshot.val().user,
                                         createdAt: firebase.database.ServerValue.TIMESTAMP
@@ -503,7 +528,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 $timeout(function() {
                     $scope.transactions = snapshot.val();
                 });
-                
+
             });
 
         });
