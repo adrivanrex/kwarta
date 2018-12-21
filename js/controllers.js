@@ -101,7 +101,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
     }
 
-    function register(email, password, inviteCode) {
+    function register(email, password, ') {
         invite = false;
 
         if (inviteCode == null) {
@@ -114,7 +114,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
          */
 
         Http = new XMLHttpRequest();
-        url="https://api-project-375080472585.firebaseio.com/inviteCode.json?orderBy=%value%22&print=pretty&equalTo="+inviteCode+"";
+        url="https://api-project-375080472585.firebaseio.com/inviteCode.json?orderBy=%22value%22&print=pretty&equalTo=%22"+inviteCode+"%22";
         Http.open("GET", url);
         Http.send();
         Http.onreadystatechange=(e)=>{
