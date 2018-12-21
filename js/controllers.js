@@ -126,14 +126,15 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
 
         if (password == null) {
-            document.getElementById("registerPasswordError").classList.remove('hide');
-            document.getElementById("registerPasswordError").innerHTML = "enter your password";
+            document.getElementById("invitationError").classList.remove('hide');
+            document.getElementById("invitationError").innerHTML = "enter your password";
         }
 
         if (typeof email === 'undefined') {
             document.getElementById("registerEmailError").classList.add('show');
             document.getElementById("registerEmailError").innerHTML = "invalid email address";
         }
+        
         document.getElementById("registerEmailError").classList.add('hide');
 
         if (invite) {
@@ -178,8 +179,8 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                 });
             });
         } else {
-            document.getElementById("registerEmailError").classList.add('show');
-            document.getElementById("registerEmailError").innerHTML = "invalid invite code. This website is only for invited members";
+            document.getElementById("invitationError").classList.add('show');
+            document.getElementById("invitationError").innerHTML = "invalid invite code. This website is only for invited members";
         }
 
 
