@@ -101,7 +101,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
     }
 
-    function register(email, password, ') {
+    function register(email, password, inviteCode) {
         invite = false;
 
         if (inviteCode == null) {
@@ -134,7 +134,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
             document.getElementById("registerEmailError").classList.add('show');
             document.getElementById("registerEmailError").innerHTML = "invalid email address";
         }
-        
+
         document.getElementById("registerEmailError").classList.add('hide');
 
         if (invite) {
