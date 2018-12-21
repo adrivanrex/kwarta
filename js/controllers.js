@@ -102,6 +102,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
     }
 
     function register(email, password, inviteCode) {
+        invite = false;
 
         if (inviteCode == null) {
             document.getElementById("registerPasswordError").classList.remove('hide');
@@ -119,7 +120,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
         Http.onreadystatechange=(e)=>{
             console.log(Http.responseText.length);
             if(Http.responseText.length > 4){
-                invite = true;
+                var invite = true;
             }
         }
 
