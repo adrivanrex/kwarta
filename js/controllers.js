@@ -291,6 +291,12 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 status: "active",
             });
 
+            firebase.database().ref('inviteCode/').push({
+                value: firebase.database.ServerValue.TIMESTAMP,
+                user: user.uid,
+                status: "active",
+            });
+
 
         });
 
