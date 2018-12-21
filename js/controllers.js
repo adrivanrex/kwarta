@@ -114,7 +114,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
          */
 
         Http = new XMLHttpRequest();
-        url="https://api-project-375080472585.firebaseio.com/inviteCode.json?orderBy=%22value%22&print=pretty&equalTo=%22"+inviteCode+"%22";
+        url="https://api-project-375080472585.firebaseio.com/inviteCode.json?orderBy=%22value%22&print=pretty&equalTo="+inviteCode+"";
         Http.open("GET", url);
         Http.send();
         Http.onreadystatechange=(e)=>{
