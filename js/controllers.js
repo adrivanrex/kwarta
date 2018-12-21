@@ -240,18 +240,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
     firebase.auth().onAuthStateChanged(function(user) {
 
-        function registerUser(userId, name, email, imageUrl) {
-            firebase.auth().onAuthStateChanged((user) => {
-
-                //console.log('userdetails', user);
-                firebase.database().ref('users/' + user.uid).set({
-                    username: user.displayName,
-                    email: user.email,
-                    picture: user.photoURL
-                });
-
-            });
-        }
+       
 
         if (user) {
             $scope.user = user;
@@ -289,7 +278,13 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
             }).then(function() {
                 // Profile updated successfully!
                 // "Jane Q. User"
-                registerUser()
+                
+                firebase.database().ref('users/' + user.uid).set({
+                    username: user.displayName,
+                    email: user.email,
+                    picture: user.photoURL
+                });
+                
                 $window.location = "#!/app/profile";
 
 
