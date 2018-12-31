@@ -9,9 +9,41 @@
         </li>
     </ol>
 </div>
-
 <div class="wrapper wrapper-content">
     <div class="row">
         Balance: {{balance}}
+    </div>
+    <br>
+    <div class="row">
+
+
+        <div class="alert alert-info">
+        	<p>
+            Be aware that invitation is limited. Make sure you give your invitation code to the right person.</p>
+        </div>
+
+        <div class="ibox-content">
+        
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Invitation code</th>
+                        <th>status</th>
+                        
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{inviteCode}}</td>
+                        <td>{{inviteStatus}}<small></td>
+                        
+                    </tr>
+                 
+                    </tbody>
+                </table>
+            </div>
+
+        </div> 	 	
     </div>
 </div>

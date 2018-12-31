@@ -392,6 +392,22 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
             });
         });
     };
+
+    function getUserInviteCode() {
+        firebase.auth().onAuthStateChanged((user) => {
+            let ref = firebase.database().ref("inviteCode")
+                .orderByChild("user")
+                .equalTo(user.uid)
+                .limitToLast(1)
+            ref.on("value", function(snapshot) {
+                key = Object.keys(snapshot.val());
+                console.log("invite code",snapshot.val());
+                $scope.inviteCode = snapshot.val()[key].value;
+                $scope.inviteStatus = snapshot.val()[key].status;
+            });
+        });
+    };
+    getUserInviteCode();
     getUserInfo();
 
     $scope.count = 0;
