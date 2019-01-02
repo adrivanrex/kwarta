@@ -137,7 +137,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                         console.log("invite true");
                         
                         firebase.auth().onAuthStateChanged((user) => {
-                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(1545377296192)
+                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(inviteCode)
                             ref.once("child_added", function(snapshot) {
                                 snapshot.ref.update({ status: "used" })
                             });
@@ -407,6 +407,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
             });
         });
     };
+
     getUserInviteCode();
     getUserInfo();
 
@@ -442,10 +443,13 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
     function createBalance() {
         firebase.auth().onAuthStateChanged((user) => {
+
             firebase.database().ref('Balance/').push({
                 balance: 100000,
                 email: user.email,
                 user: user.uid,
+                userinfo: user.displayName,
+                test: "test",
             });
         });
 
