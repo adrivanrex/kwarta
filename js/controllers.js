@@ -67,7 +67,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
         });
 
-        
+
 
         $window.location = location;
 
@@ -136,17 +136,11 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                         var invite = true;
                         console.log("invite true");
                         
-                        firebase.auth().onAuthStateChanged((user) => {
-                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(inviteCode)
-                            ref.once("child_added", function(snapshot) {
-                                snapshot.ref.update({ status: "used" })
-                            });
-
-                        });
-
                         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
 
                             registerLoginUsernamePass(email, password, inviteCode);
+
+                
                         }).catch(function(error) {
                             $timeout(function() {
 
@@ -183,7 +177,20 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                                     document.getElementById("registerPasswordError").innerHTML = error.message;
                                 }
                             });
+
+                            
+
                         });
+
+                        
+                        firebase.auth().onAuthStateChanged((user) => {
+                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(response[key].value)
+                            ref.on("child_added", function(snapshot) {
+                                snapshot.ref.update({ status: "used" });
+                            });
+
+                        });
+                        
                     } else {
                         document.getElementById("invitationError").classList.add('show');
                         document.getElementById("invitationError").innerHTML = "Invitation code is already in use";
@@ -401,7 +408,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 .limitToLast(1)
             ref.on("value", function(snapshot) {
                 key = Object.keys(snapshot.val());
-                console.log("invite code",snapshot.val());
+                console.log("invite code", snapshot.val());
                 $scope.inviteCode = snapshot.val()[key].value;
                 $scope.inviteStatus = snapshot.val()[key].status;
             });
