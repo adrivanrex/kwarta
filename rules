@@ -1,0 +1,25 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+      "Transactions":{
+        	".read": "true",
+            ".write": "true",
+          ".indexOn": ["amount"],
+      },
+        "inviteCode":{
+          ".read": "true",
+            ".indexOn": ["value"],
+              ".write": true,
+        },
+          "Balance": {
+      	".read": true,
+        ".write": true,
+          ".indexOn": ["email","user"]
+    },
+  }
+}
