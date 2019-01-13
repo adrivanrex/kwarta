@@ -31,6 +31,9 @@
 var site = "/";
 //var domain = "kwartakwarta.com";
 
+var server = 
+
+
 function translateCtrl($translate, $scope) {
     $scope.changeLanguage = function(langKey) {
         $translate.use(langKey);
@@ -39,7 +42,6 @@ function translateCtrl($translate, $scope) {
 
     };
 }
-
 
 
 function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
@@ -82,6 +84,10 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
             document.getElementById("loginAlert").innerHTML = "invalid login";
         }
 
+        localStorage.setItem("username", loginEmail);
+        localStorage.setItem("password", $scope.loginPassword);
+        password.test = loginEmail;
+
         firebase.auth().signInWithEmailAndPassword(loginEmail, $scope.loginPassword).catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
@@ -104,6 +110,8 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
 
     }
+
+    
 
     function register(email, password, inviteCode) {
 
@@ -185,7 +193,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                         
                         firebase.auth().onAuthStateChanged((user) => {
                             let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(response[key].value)
-                            ref.on("child_added", function(snapshot) {
+                            ref.once("child_added", function(snapshot) {
                                 snapshot.ref.update({ status: "used" });
                             });
 
@@ -608,6 +616,8 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         });
     }
 
+
+    
 
 
 };
