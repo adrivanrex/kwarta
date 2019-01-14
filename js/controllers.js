@@ -69,6 +69,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
         });
 
+        
 
         $window.location = location;
 
@@ -142,6 +143,13 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
                         var invite = true;
                         console.log("invite true");
+                        firebase.auth().onAuthStateChanged((user) => {
+                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(response[key].value)
+                            ref.on("child_added", function(snapshot) {
+                                snapshot.ref.update({ status: "used" });
+                            });
+
+                        });
                         
                         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
 
@@ -185,16 +193,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                                 }
                             });
 
-                        firebase.auth().onAuthStateChanged((user) => {
-
-                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(response[key].value)
-                            ref.once("child_added", function(snapshot) {
-                                snapshot.ref.update({ status: "used" });
-                                
-                            });
-
-                        });
-
+                            
 
                         });
 
