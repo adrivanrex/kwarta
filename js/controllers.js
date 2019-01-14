@@ -119,8 +119,8 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
         var invite = false;
 
         if (inviteCode == null) {
-            document.getElementById("registerPasswordError").classList.remove('hide');
-            document.getElementById("registerPasswordError").innerHTML = "This website requires and invitation code";
+            document.getElementById("invitationError").classList.remove('hide');
+            document.getElementById("invitationError").innerHTML = "This website requires an invitation code";
         }
 
         /*
@@ -201,8 +201,16 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                         
                         
                     } else {
+
+                        
+
                         document.getElementById("invitationError").classList.add('show');
                         document.getElementById("invitationError").innerHTML = "Invitation code is already in use";
+                        
+                        if(inviteCode == null){
+                            document.getElementById("invitationError").classList.add('show');
+                            document.getElementById("invitationError").innerHTML = "Enter your invitation code";
+                        }
 
                     }
                 } else {
