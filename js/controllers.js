@@ -86,7 +86,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
         localStorage.setItem("username", loginEmail);
         localStorage.setItem("password", $scope.loginPassword);
-        password.test = loginEmail;
+        
 
         firebase.auth().signInWithEmailAndPassword(loginEmail, $scope.loginPassword).catch(function(error) {
             // Handle Errors here.
