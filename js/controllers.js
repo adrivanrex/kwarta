@@ -150,7 +150,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                             });
 
                         });
-                        
+
                         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
 
                             registerLoginUsernamePass(email, password, inviteCode);
@@ -301,12 +301,6 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     $scope.verifySubmit = function() {
 
         firebase.auth().onAuthStateChanged((user) => {
-            firebase.database().ref('inviteCode/').push({
-                value: firebase.database.ServerValue.TIMESTAMP,
-                user: user.uid,
-                status: "active",
-            });
-
             firebase.database().ref('inviteCode/').push({
                 value: firebase.database.ServerValue.TIMESTAMP,
                 user: user.uid,
