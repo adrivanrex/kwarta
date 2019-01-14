@@ -146,6 +146,14 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                         
                         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
 
+                            firebase.auth().onAuthStateChanged((user) => {
+                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(response[key].value)
+                            ref.once("child_added", function(snapshot) {
+                                snapshot.ref.update({ status: "used" });
+                            });
+
+                        });
+                            
                             registerLoginUsernamePass(email, password, inviteCode);
 
                 
@@ -191,13 +199,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                         });
 
                         
-                        firebase.auth().onAuthStateChanged((user) => {
-                            let ref = firebase.database().ref("inviteCode").orderByChild("value").equalTo(response[key].value)
-                            ref.once("child_added", function(snapshot) {
-                                snapshot.ref.update({ status: "used" });
-                            });
-
-                        });
+                        
                         
                     } else {
                         document.getElementById("invitationError").classList.add('show');
@@ -207,7 +209,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                 } else {
 
                     document.getElementById("invitationError").classList.add('show');
-                    document.getElementById("invitationError").innerHTML = "invalid invite code. This website is only for invited members";
+                    document.getElementById("invitationError").innerHTML = "invalid invite code. This website is only for invited members. request invite code from a member";
 
                 }
             }
