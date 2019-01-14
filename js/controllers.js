@@ -123,6 +123,12 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
             document.getElementById("invitationError").innerHTML = "This website requires an invitation code";
         }
 
+        if($scope.registerPassword !== $scope.verifyRegisterPassword){
+            document.getElementById("passwordError").classList.add('show');
+            document.getElementById("passwordError").innerHTML = "Password does not match. verify your password.";
+
+        }
+
         /*
          * Verify Invite Code
          */
