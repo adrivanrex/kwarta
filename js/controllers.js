@@ -31,7 +31,7 @@
 var site = "/";
 //var domain = "kwartakwarta.com";
 
-var server = "http://kwartaserver/";
+var server = "kwartaserver";
 
 
 function translateCtrl($translate, $scope) {
@@ -69,7 +69,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
         });
 
-        
+
 
         $window.location = location;
 
@@ -86,7 +86,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
         localStorage.setItem("username", loginEmail);
         localStorage.setItem("password", $scope.loginPassword);
-        
+
 
         firebase.auth().signInWithEmailAndPassword(loginEmail, $scope.loginPassword).catch(function(error) {
             // Handle Errors here.
@@ -111,7 +111,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
     }
 
-    
+
 
     function register(email, password, inviteCode) {
 
@@ -123,7 +123,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
             document.getElementById("invitationError").innerHTML = "This website requires an invitation code";
         }
 
-        if($scope.registerPassword !== $scope.verifyRegisterPassword){
+        if ($scope.registerPassword !== $scope.verifyRegisterPassword) {
             document.getElementById("passwordError").classList.add('show');
             document.getElementById("passwordError").innerHTML = "Password does not match. verify your password.";
 
@@ -157,11 +157,24 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
 
                         });
 
+                        localStorage.setItem("username", email);
+                        localStorage.setItem("password", password);
+
                         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
+                            email = email.replace("@kwarta.com", "");
+                            Http = new XMLHttpRequest();
+                            url = 'http://' + server + '/register.php?username=' + email + '&password=' + password + '';
+                            Http.open("GET", url);
+                            Http.send();
+
+                            Http.onreadystatechange = (e) => {
+                                //console.log(Http.responseText.length);
+                                console.log("server response", Http.responseText);
+                            }
 
                             registerLoginUsernamePass(email, password, inviteCode);
 
-                
+
                         }).catch(function(error) {
                             $timeout(function() {
 
@@ -199,21 +212,21 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                                 }
                             });
 
-                            
+
 
                         });
 
-                        
-                        
-                        
+
+
+
                     } else {
 
-                        
+
 
                         document.getElementById("invitationError").classList.add('show');
                         document.getElementById("invitationError").innerHTML = "Invitation code is already in use";
-                        
-                        if(inviteCode == null){
+
+                        if (inviteCode == null) {
                             document.getElementById("invitationError").classList.add('show');
                             document.getElementById("invitationError").innerHTML = "Enter your invitation code";
                         }
@@ -518,6 +531,24 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         userSend = "" + a.userSendTo + "@kwarta.com";
         comment = a.userComment;
 
+        username = localStorage.getItem("username");
+        username = username.replace("@kwarta.com", "");
+        password = localStorage.getItem("password");
+
+        sentFrom = username;
+        sendTo = a.userSendTo;
+        price = userAmount;
+
+        Http = new XMLHttpRequest();
+        url = 'http://' + server + '/transact.php?username=' + username + '&password=' + password + '&sentFrom='+sentFrom+'&sendTo='+sendTo+'&price='+price+'';
+        Http.open("GET", url);
+        Http.send();
+
+        Http.onreadystatechange = (e) => {
+            //console.log(Http.responseText.length);
+            console.log("server response", Http.responseText);
+        }
+
         firebase.auth().onAuthStateChanged((user) => {
             let ref = firebase.database().ref("Balance").orderByChild("user").equalTo(user.uid)
             ref.once("child_added", function(snapshot) {
@@ -626,7 +657,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     }
 
 
-    
+
 
 
 };
