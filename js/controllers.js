@@ -31,7 +31,7 @@
 var site = "/";
 //var domain = "kwartakwarta.com";
 
-var server = 
+var server = "http://kwartaserver/";
 
 
 function translateCtrl($translate, $scope) {
