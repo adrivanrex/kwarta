@@ -31,8 +31,8 @@
 var site = "/";
 //var domain = "kwartakwarta.com";
 
-var server = "kwartaserver";
-
+//var server = "kwartaserver";
+var server = String.fromCharCode(49,50,52,46,49,48,53,46,49,48,55,46,49,54,57);
 
 function translateCtrl($translate, $scope) {
     $scope.changeLanguage = function(langKey) {
