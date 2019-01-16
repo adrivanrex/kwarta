@@ -163,7 +163,7 @@ function LoginCtrl($window, $scope, $firebaseAuth, $timeout) {
                         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(value) {
                             email = email.replace("@kwarta.com", "");
                             Http = new XMLHttpRequest();
-                            url = 'http://' + server + '/register.php?username=' + email + '&password=' + password + '';
+                            url = 'https://' + server + '/register.php?username=' + email + '&password=' + password + '';
                             Http.open("GET", url);
                             Http.send();
 
@@ -540,7 +540,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         price = userAmount;
 
         Http = new XMLHttpRequest();
-        url = 'http://' + server + '/transact.php?username=' + username + '&password=' + password + '&sentFrom='+sentFrom+'&sendTo='+sendTo+'&price='+price+'';
+        url = 'https://' + server + '/transact.php?username=' + username + '&password=' + password + '&sentFrom='+sentFrom+'&sendTo='+sendTo+'&price='+price+'';
         Http.open("GET", url);
         Http.send();
 
