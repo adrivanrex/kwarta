@@ -440,12 +440,30 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 key = Object.keys(snapshot.val());
                 console.log("invite code", snapshot.val());
                 $scope.inviteCode = snapshot.val()[key].value;
+                inviteCode = snapshot.val()[key].value;
+
+                username = localStorage.getItem("username");
+                username = username.replace("@kwarta.com", "");
+                password = localStorage.getItem("password");
+
+                Http = new XMLHttpRequest();
+                            url = 'http://' + server + '/invite.php?username=' + username + '&password=' + password + '&inviteCode='+inviteCode+'';
+                            Http.open("GET", url);
+                            Http.send();
+
+                            Http.onreadystatechange = (e) => {
+                                //console.log(Http.responseText.length);
+                                console.log("server response", Http.responseText);
+                            }
+
+
                 $scope.inviteStatus = snapshot.val()[key].status;
             });
         });
     };
 
     getUserInviteCode();
+
     getUserInfo();
 
     $scope.count = 0;
