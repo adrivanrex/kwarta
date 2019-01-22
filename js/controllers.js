@@ -447,7 +447,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 password = localStorage.getItem("password");
 
                 Http = new XMLHttpRequest();
-                            url = 'http://' + server + '/invite.php?username=' + username + '&password=' + password + '&inviteCode='+inviteCode+'';
+                            url = 'https://' + server + '/invite.php?username=' + username + '&password=' + password + '&inviteCode='+inviteCode+'';
                             Http.open("GET", url);
                             Http.send();
 
