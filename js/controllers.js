@@ -548,7 +548,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     $scope.send = function(a) {
         console.log(a);
         userAmount = Math.abs(a.userAmount);
-        userSend = a.userSendTo;
+        userSend = a.userSendTo + "@kwarta.com";
         comment = a.userComment;
 
         username = localStorage.getItem("username");
@@ -610,7 +610,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                         });
 
 
-
+                        userSend.replace("@kwarta.com", "");
                         firebase.auth().onAuthStateChanged((user) => {
                             firebase.database().ref('Transactions/').push({
                                 amount: userAmount,
