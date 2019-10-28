@@ -548,7 +548,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     $scope.send = function(a) {
         console.log(a);
         userAmount = Math.abs(a.userAmount);
-        userSend = "" + a.userSendTo + "@kwarta.com";
+        userSend = a.userSendTo;
         comment = a.userComment;
 
         username = localStorage.getItem("username");
