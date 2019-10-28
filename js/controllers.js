@@ -525,7 +525,9 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 } else {
                     key = Object.keys(snapshot.val());
                     $timeout(function() {
-                        $scope.balance = snapshot.val()[key].balance;
+                        balanceFormat = snapshot.val()[key].balance;
+                        $scope.balance = balanceFormat.toLocaleString();
+
                     });
                 }
             });
