@@ -503,7 +503,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         sendTo = a.userSendTo;
         price = userAmount;
 
-        if(comment == null){
+        if (comment == null) {
             alert("please add comment");
             return;
         }
@@ -519,7 +519,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         }
 
         firebase.auth().onAuthStateChanged((user) => {
-            
+
             /** check if user exist **/
             let ref = firebase.database().ref("Guest")
                 .orderByChild("email")
@@ -527,100 +527,99 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 .limitToLast(1)
             ref.on("value", function(snapshot) {
                 console.log(snapshot.val());
-                if(snapshot.val() !== null){
+                if (snapshot.val() !== null) {
                     /** check sender balance first **/
                     firebase.auth().onAuthStateChanged((user) => {
 
-            let ref = firebase.database().ref("Balance").orderByChild("user").equalTo(user.uid)
-            ref.once("child_added", function(snapshot) {
-                /** Disallow Sending to self **/
+                        let ref = firebase.database().ref("Balance").orderByChild("user").equalTo(user.uid)
+                        ref.once("child_added", function(snapshot) {
+                            /** Disallow Sending to self **/
 
 
-                if (userSend == snapshot.val().email) {
-                    alert("sending to self not allowed");
-                } else {
+                            if (userSend == snapshot.val().email) {
+                                alert("sending to self not allowed");
+                            } else {
 
-                    if (userAmount > snapshot.val().balance) {
-                        alert("Insufficient balance");
-                    } else {
-                        /** Add balance to user **/
-                        firebase.auth().onAuthStateChanged((user) => {
-                            let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(userSend)
-                            ref.once("child_added", function(snapshot) {
-                                console.log(snapshot.val().balance);
-                                key = Object.keys(snapshot.val());
-                                userBalance = snapshot.val().balance;
-                                console.log("BALANCE", userBalance);
-                                userBalance = userBalance + userAmount;
-                                snapshot.ref.update({ balance: userBalance })
-                            });
+                                if (userAmount > snapshot.val().balance) {
+                                    alert("Insufficient balance");
+                                } else {
+                                    /** Add balance to user **/
+                                    firebase.auth().onAuthStateChanged((user) => {
+                                        let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(userSend)
+                                        ref.once("child_added", function(snapshot) {
+                                            console.log(snapshot.val().balance);
+                                            key = Object.keys(snapshot.val());
+                                            userBalance = snapshot.val().balance;
+                                            console.log("BALANCE", userBalance);
+                                            userBalance = userBalance + userAmount;
+                                            snapshot.ref.update({ balance: userBalance })
+                                        });
 
-                        });
-
-                        /** Minus balance to profile **/
-                        firebase.auth().onAuthStateChanged((user) => {
-                            let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(user.email)
-                            ref.once("child_added", function(snapshot) {
-                                console.log(snapshot.val());
-                                key = Object.keys(snapshot.val());
-                                userBalance = snapshot.val().balance;
-                                userBalance = userBalance - userAmount;
-                                snapshot.ref.update({ balance: userBalance })
-                            });
-
-                        });
-
-
-                        
-                        firebase.auth().onAuthStateChanged((user) => {
-                            userSend = userSend.replace("@kwarta.com", "");
-                            firebase.database().ref('Transactions/').push({
-                                amount: userAmount,
-                                sendto: userSend,
-                                type: "sent",
-                                comment: comment,
-                                user: user.uid,
-                                createdAt: firebase.database.ServerValue.TIMESTAMP
-                            });
-                        });
-
-                        /** reciever Logs **/
-
-
-                        firebase.auth().onAuthStateChanged((user) => {
-                            let gef = firebase.database().ref("Guest").orderByChild("email").equalTo(searchUser)
-                            gef.once("child_added", function(snapshot) {
-                                key = Object.keys(snapshot.val());
-
-                                firebase.auth().onAuthStateChanged((user) => {
-                                    firebase.database().ref('Transactions/').push({
-                                        amount: userAmount,
-                                        sendto: userSend,
-                                        comment: comment,
-                                        type: "recieve",
-                                        user: snapshot.val().user,
-                                        createdAt: firebase.database.ServerValue.TIMESTAMP
                                     });
-                                });
-                            });
+
+                                    /** Minus balance to profile **/
+                                    firebase.auth().onAuthStateChanged((user) => {
+                                        let ref = firebase.database().ref("Balance").orderByChild("email").equalTo(user.email)
+                                        ref.once("child_added", function(snapshot) {
+                                            console.log(snapshot.val());
+                                            key = Object.keys(snapshot.val());
+                                            userBalance = snapshot.val().balance;
+                                            userBalance = userBalance - userAmount;
+                                            snapshot.ref.update({ balance: userBalance })
+                                        });
+
+                                    });
+
+
+
+                                    firebase.auth().onAuthStateChanged((user) => {
+                                        userSend = userSend.replace("@kwarta.com", "");
+                                        firebase.database().ref('Transactions/').push({
+                                            amount: userAmount,
+                                            sendto: userSend,
+                                            type: "sent",
+                                            comment: comment,
+                                            user: user.uid,
+                                            createdAt: firebase.database.ServerValue.TIMESTAMP
+                                        });
+                                    });
+
+                                    /** reciever Logs **/
+
+
+                                    firebase.auth().onAuthStateChanged((user) => {
+                                        let gef = firebase.database().ref("Guest").orderByChild("email").equalTo(searchUser)
+                                        gef.once("child_added", function(snapshot) {
+                                            key = Object.keys(snapshot.val());
+
+                                            firebase.auth().onAuthStateChanged((user) => {
+                                                firebase.database().ref('Transactions/').push({
+                                                    amount: userAmount,
+                                                    sendto: userSend,
+                                                    comment: comment,
+                                                    type: "recieve",
+                                                    user: snapshot.val().user,
+                                                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                                                });
+                                            });
+                                        });
+
+                                    });
+
+                                    alert("successfully sent");
+
+
+                                }
+
+
+                            }
 
                         });
-
-                        alert("successfully sent");
-
-
-                    }
-
-
-                }
-
-            });
-        });
+                    });
+                }else{
+                    alert("check username")
                 }
             });
-        
-            
-            alert(0);
         });
 
 
