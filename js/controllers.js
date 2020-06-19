@@ -9,7 +9,6 @@
  *  - sparklineChartCtrl
  *  - widgetFlotChart
  *  - modalDemoCtrl
- *  - ionSlider
  *  - wizardCtrl
  *  - CalendarCtrl
  *  - chartJsCtrl
@@ -476,9 +475,10 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
             });
         });
     }
-    setInterval(function(){ getBalance($scope); }, 1000);
+    
     getBalance($scope);
-
+    setInterval(function(){ getBalance($scope); }, 1000);
+    
     $scope.$on('$locationChangeStart', function(event) {
         switch ($location.path()) {
             case '/app/profile':
