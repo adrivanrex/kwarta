@@ -453,7 +453,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
 
 
-    function getBalance() {
+    function getBalance($scope) {
         firebase.auth().onAuthStateChanged((user) => {
             let ref = firebase.database().ref("Balance")
                 .orderByChild("email")
@@ -468,14 +468,16 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                     $timeout(function() {
                         balanceFormat = snapshot.val()[key].balance;
                         $scope.balance = balanceFormat.toLocaleString();
+                        $scope.apply;
+                        $scope.digest();
 
                     });
                 }
             });
         });
     }
-
-    getBalance();
+    setInterval(function(){ getBalance($scope); }, 1000);
+    getBalance($scope);
 
     $scope.$on('$locationChangeStart', function(event) {
         switch ($location.path()) {
