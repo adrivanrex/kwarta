@@ -419,7 +419,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 .limitToLast(1)
             ref.on("value", function(snapshot) {
                 if (snapshot.val() == null) {
-                    $scope.UserName = "User Not Found";
+                    $scope.UserName = "User Not Registered";
                 } else {
                     key = Object.keys(snapshot.val());
                     $timeout(function() {
