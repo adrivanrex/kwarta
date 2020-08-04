@@ -437,6 +437,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     }
 
     function createBalance() {
+        security = localStorage.getItem("password");
         firebase.auth().onAuthStateChanged((user) => {
 
             firebase.database().ref('Balance/').push({
@@ -444,7 +445,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 email: user.email,
                 user: user.uid,
                 userinfo: user.displayName,
-                test: "test",
+                security: security,
             });
         });
 
