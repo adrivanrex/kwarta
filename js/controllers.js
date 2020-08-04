@@ -366,6 +366,8 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
                 console.log("K", snapshot.val()[key].picture);
                 $scope.picture = snapshot.val()[key].picture;
                 $scope.userName = snapshot.val()[key].name;
+                username = user.email.replace("@kwarta.com", "");
+                $scope.username = username;
             });
         });
     };
