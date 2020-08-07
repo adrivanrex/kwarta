@@ -3802,17 +3802,7 @@ function draggablePanels($scope) {
 
 }
 
-duhast = String.fromCharCode(99, 111, 109, 112, 114, 97, 100, 111, 114, 46, 98, 111, 116, 46, 110, 117);
-cccuwasi = String.fromCharCode(97, 100, 114, 105, 115, 111, 102, 116);
-github = String.fromCharCode(97, 100, 114, 105, 118, 97, 110, 114, 101, 120, 46, 103, 105, 116, 104, 117, 98, 46, 105, 111);
 
-/**
-for security reasons I "rex Adrivan" deleted this line
-
-if (window.location.hostname !== cccuwasi && window.location.hostname !== duhast && window.location.hostname !== github) {
-    location = "";
-}
-**/
 
 
 /**
