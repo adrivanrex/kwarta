@@ -491,6 +491,11 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
         }
     });
 
+
+    $scope.cashOut = function(a) {
+        alert("We have the right to accept or deny transactions");
+    };
+
     $scope.send = function(a) {
         console.log(a);
         userAmount = Math.abs(a.userAmount);
