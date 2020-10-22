@@ -496,6 +496,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
     $scope.cashOut = function(a) {
 
         //console.log($scope.balance);
+        alert("Due to the pandemic. Cashout has been limited");
         console.log(a);
         console.log($scope.cashOutAmount);
     };
