@@ -662,10 +662,8 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 server = String.fromCharCode(107,119,97,114,116,97,107,119,97,114,116,97,46,99,111,109);
 hostname = String.fromCharCode(107,119,97,114,116,97,107,119,97,114,116,97);
 
-if(server !== location.host && hostname && hostname !== location.host){
-    document.body.innerHTML = '';
-};
 
+//if(server !== location.host && hostname && hostname !== location.host){document.body.innerHTML = '';};
 
 /**
  * dashboardFlotOne - simple controller for data
