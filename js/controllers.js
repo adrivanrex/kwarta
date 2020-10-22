@@ -493,7 +493,7 @@ function MainCtrl($window, $scope, $firebaseAuth, $location, $firebaseObject, $t
 
 
     $scope.cashOut = function(a) {
-        alert("We have the right to accept or deny transactions");
+        alert("We have the right to accept or deny transactions, processing..");
     };
 
     $scope.send = function(a) {
